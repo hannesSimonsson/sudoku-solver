@@ -18,8 +18,9 @@ giveColumn :: Board -> Int -> [Int]
 giveColumn [] column = []
 giveColumn (x:xs) column = [x !! (column-1)] ++ giveColumn xs column
 
+--gives a list of all the numbers within a square 1-9
 giveSquare :: Board -> Int -> [Int]
 giveSquare board square
-    | elem square [1,2,3] = [(splitAt (square+1) (board !! 0))] ++ [(splitAt (square+1) (board !! 1))] ++ [(splitAt (square+1) (board !! 2))]
-    | elem square [4,5,6] = [(splitAt (square-2) (board !! 3))] ++ [(splitAt (square-2) (board !! 4))] ++ [(splitAt (square-2) (board !! 5))]
-    | elem square [7,8,9] = [(splitAt (square-5) (board !! 6))] ++ [(splitAt (square-5) (board !! 7))] ++ [(splitAt (square-5) (board !! 8))]
+    | elem square [1,4,7] = fst (splitAt 3 (board !! (square-1))) ++ fst (splitAt 3 (board !! (square))) ++ fst (splitAt 3 (board !! (square+1)))
+    | elem square [2,5,8] = snd (splitAt 3 (fst (splitAt 6 (board !! (square-2))))) ++ snd (splitAt 3 (fst (splitAt 6 (board !! (square-1))))) ++ snd (splitAt 3 (fst (splitAt 6 (board !! (square)))))
+    | elem square [3,6,9] = snd (splitAt 6 (board !! (square-3))) ++ snd (splitAt 6 (board !! (square-2))) ++ snd (splitAt 6 (board !! (square-1)))
