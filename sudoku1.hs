@@ -4,13 +4,13 @@ import Debug.Trace
 type Board = [Int]
 
 data Tree a = Void | T Board [(Tree a)]
-     deriving (Show)
+     deriving (Show, Eq)
 
-sudoku board = buildTree (T board [])
+--main
+sudoku board = traverseTree $ buildTree (T board [])
 
+--build a tree where all leafs are Void except for the solution
 buildTree:: Tree a -> Tree a
---buildTree (T [] [x:xs]) = buildTree (Prelude.concat x)
---buildTree Void = buildTree Void
 buildTree (T [] [(T board1 []),
                  (T board2 []),
                  (T board3 []),
@@ -28,11 +28,23 @@ buildTree (T [] [(T board1 []),
                                          (buildTree (T board7 [])),
                                          (buildTree (T board8 [])),
                                          (buildTree (T board9 []))]
-
-buildTree (T board []) | boardTest board && Prelude.elem 0 board = buildTree (T [] [(T (changeZero 1 board) []), (T (changeZero 2 board) []), (T (changeZero 3 board) []), (T (changeZero 4 board) []), (T (changeZero 5 board) []), (T (changeZero 6 board) []), (T (changeZero 7 board) []), (T (changeZero 8 board) []), (T (changeZero 9 board) [])]) 
+buildTree (T board []) | boardTest board && Prelude.elem 0 board = buildTree (T [] [(T (changeZero 1 board) []),
+                                                                                    (T (changeZero 2 board) []), 
+                                                                                    (T (changeZero 3 board) []), 
+                                                                                    (T (changeZero 4 board) []), 
+                                                                                    (T (changeZero 5 board) []), 
+                                                                                    (T (changeZero 6 board) []), 
+                                                                                    (T (changeZero 7 board) []), 
+                                                                                    (T (changeZero 8 board) []), 
+                                                                                    (T (changeZero 9 board) [])]) 
                        | boardTest board && Prelude.notElem 0 board = T board []
                        | otherwise = Void
 
+--traverseTree creates a list of possible solutions
+traverseTree (T [] (x:xs)) | x /= Void = [] Prelude.++ traverseTree x Prelude.++ traverseTree (T [] xs)
+                           | x == Void = [] Prelude.++ traverseTree (T [] xs)
+traverseTree (T board []) | board /= [] = board
+                          | board == [] = []
 
 
 --change first zero to given number
