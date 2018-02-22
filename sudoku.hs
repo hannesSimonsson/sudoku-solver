@@ -1,4 +1,3 @@
---import Data.Vector as V
 import Debug.Trace
 import Test.HUnit
 
